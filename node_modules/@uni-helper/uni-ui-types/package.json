@@ -1,0 +1,92 @@
+{
+  "name": "@uni-helper/uni-ui-types",
+  "version": "0.5.11",
+  "description": "uni-ui 组件类型",
+  "keywords": [
+    "uni-app",
+    "uniapp",
+    "uni-ui",
+    "uniui",
+    "type"
+  ],
+  "homepage": "https://github.com/uni-helper/uni-ui-types#readme",
+  "bugs": {
+    "url": "https://github.com/uni-helper/uni-ui-types/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uni-helper/uni-ui-types.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "ModyQyW",
+    "email": "wurui-dev@foxmail.com",
+    "url": "https://modyqyw.github.io"
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@dcloudio/types": "^3.3.3",
+    "@uni-helper/uni-app-types": "^0.5.7",
+    "vue3": "npm:vue@^3.2.47"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.6.3",
+    "@commitlint/config-conventional": "^17.6.3",
+    "@commitlint/prompt": "^17.6.3",
+    "@modyqyw/fabric": "^8.0.3",
+    "@tsconfig/node18": "^2.0.0",
+    "@types/node": "^18.16.7",
+    "@typescript-eslint/eslint-plugin": "^5.59.5",
+    "@typescript-eslint/parser": "^5.59.5",
+    "@vitest/coverage-c8": "^0.31.0",
+    "bumpp": "^9.1.0",
+    "c8": "^7.13.0",
+    "commitizen": "^4.3.0",
+    "concurrently": "^8.0.1",
+    "eslint": "^8.40.0",
+    "is-ci": "^3.0.1",
+    "lint-staged": "^13.2.2",
+    "markdownlint-cli": "^0.34.0",
+    "prettier": "^2.8.8",
+    "publint": "^0.1.11",
+    "rollup": "^3.21.6",
+    "rollup-plugin-delete": "^2.0.0",
+    "rollup-plugin-dts": "^5.3.0",
+    "simple-git-hooks": "^2.8.1",
+    "taze": "^0.10.1",
+    "typescript": "^5.0.4",
+    "vitest": "^0.31.0"
+  },
+  "peerDependencies": {
+    "@uni-helper/uni-app-types": "^0.5.1"
+  },
+  "peerDependenciesMeta": {
+    "@uni-helper/uni-app-types": {
+      "optional": true
+    }
+  },
+  "packageManager": "pnpm@8.5.0",
+  "engines": {
+    "node": ">=14.18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "check:deps": "taze",
+    "check:types": "tsc --noEmit",
+    "dev": "rollup -c --watch",
+    "lint": "conc \"pnpm:lint:eslint\" \"pnpm:lint:markdownlint\" \"pnpm:lint:publint\"",
+    "lint:eslint": "eslint ./src --fix --cache --ignore-path=.gitignore",
+    "lint:markdownlint": "markdownlint . --fix --ignore-path=.gitignore",
+    "lint:publint": "publint",
+    "release": "pnpm install && pnpm run build && pnpm run lint && pnpm run check:types && pnpm run test && bumpp",
+    "test": "vitest typecheck --run",
+    "test:coverage": "vitest typecheck --run --coverage"
+  }
+}
