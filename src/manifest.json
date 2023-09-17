@@ -1,5 +1,5 @@
 {
-    "name" : "",
+    "name" : "BIM-uniapp",
     "appid" : "",
     "description" : "",
     "versionName" : "1.0.0",
@@ -16,7 +16,7 @@
             "autoclose" : true,
             "delay" : 0
         },
-        
+       
         "modules" : {},
        
         "distribute" : {
@@ -50,7 +50,7 @@
     "quickapp" : {},
    
     "mp-weixin" : {
-        "appid" : "",
+        "appid" : "wxbb4b0929c0a12234",
         "setting" : {
             "urlCheck" : false
         },

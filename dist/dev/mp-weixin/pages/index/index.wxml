@@ -1,0 +1,1 @@
+<view class="content"><custom-navbar u-i="3cfc43b8-0" bind:__l="__l"/><view class="text-area"><text class="title">{{a}}</text></view></view>
