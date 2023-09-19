@@ -46,13 +46,15 @@
             "sdkConfigs" : {}
         }
     },
-  
+ 
     "quickapp" : {},
    
     "mp-weixin" : {
         "appid" : "wxbb4b0929c0a12234",
         "setting" : {
-            "urlCheck" : false
+            "urlCheck" : false,
+            "ignoreDevUnusedFiles": false,
+            "ignoreUploadDevFiles": false
         },
         "usingComponents" : true
     },

@@ -1,1 +1,1 @@
-<view class="content"><custom-navbar u-i="3cfc43b8-0" bind:__l="__l"/><view class="text-area"><text class="title">{{a}}</text></view></view>
+<custom-navbar class="data-v-83a5a03c" u-i="83a5a03c-0" bind:__l="__l"/><view class="content data-v-83a5a03c"><cust-swiper class="data-v-83a5a03c" u-i="83a5a03c-1" bind:__l="__l"/></view>

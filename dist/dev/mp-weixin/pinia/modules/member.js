@@ -1,6 +1,6 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
-common_vendor.defineStore(
+const useStore = common_vendor.defineStore(
   "member",
   () => {
     const userInfo = common_vendor.ref();
@@ -28,3 +28,4 @@ common_vendor.defineStore(
     }
   }
 );
+exports.useStore = useStore;

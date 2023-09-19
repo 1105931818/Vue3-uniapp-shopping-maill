@@ -1,7 +1,8 @@
 <template>
     <view class="navbar" :style="{ paddingTop: safeAreaInsets?.top + 'px' }">
         <view class="logo" >
-            <text>logo</text>
+            <text style="font-size: 40rpx; font-weight: 600;">小兔鲜儿</text>
+            <text>&nbsp;｜&nbsp; 新鲜 &nbsp; 亲民 &nbsp; 快捷</text>
         </view>
 
         <view class="search">
@@ -62,12 +63,13 @@ const openCode = () => {
         width: 100%;
         height: 40px;
         line-height: 40px;
+        padding-left: 15px;
     }   
 
     .search { 
         width: 95%;
         height: 35px;
-        margin: 5px auto;
+        margin: 10px auto;
         padding: 0 10px;
         box-sizing: border-box;
         background: rgba($color: #f3f3f3, $alpha: 0.45);

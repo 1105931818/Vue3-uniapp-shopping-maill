@@ -685,8 +685,8 @@ function promisify$1(name, fn) {
     if (hasCallback(args)) {
       return wrapperReturnValue(name, invokeApi(name, fn, args, rest));
     }
-    return wrapperReturnValue(name, handlePromise(new Promise((resolve, reject) => {
-      invokeApi(name, fn, extend(args, { success: resolve, fail: reject }), rest);
+    return wrapperReturnValue(name, handlePromise(new Promise((resolve2, reject) => {
+      invokeApi(name, fn, extend(args, { success: resolve2, fail: reject }), rest);
     })));
   };
 }
@@ -978,7 +978,7 @@ function invokeGetPushCidCallbacks(cid2, errMsg) {
   getPushCidCallbacks.length = 0;
 }
 const API_GET_PUSH_CLIENT_ID = "getPushClientId";
-const getPushClientId = defineAsyncApi(API_GET_PUSH_CLIENT_ID, (_, { resolve, reject }) => {
+const getPushClientId = defineAsyncApi(API_GET_PUSH_CLIENT_ID, (_, { resolve: resolve2, reject }) => {
   Promise.resolve().then(() => {
     if (typeof enabled === "undefined") {
       enabled = false;
@@ -987,7 +987,7 @@ const getPushClientId = defineAsyncApi(API_GET_PUSH_CLIENT_ID, (_, { resolve, re
     }
     getPushCidCallbacks.push((cid2, errMsg) => {
       if (cid2) {
-        resolve({ cid: cid2 });
+        resolve2({ cid: cid2 });
       } else {
         reject(errMsg);
       }
@@ -1052,9 +1052,9 @@ function promisify(name, api) {
     if (isFunction(options.success) || isFunction(options.fail) || isFunction(options.complete)) {
       return wrapperReturnValue(name, invokeApi(name, api, options, rest));
     }
-    return wrapperReturnValue(name, handlePromise(new Promise((resolve, reject) => {
+    return wrapperReturnValue(name, handlePromise(new Promise((resolve2, reject) => {
       invokeApi(name, api, extend({}, options, {
-        success: resolve,
+        success: resolve2,
         fail: reject
       }), rest);
     })));
@@ -3590,6 +3590,46 @@ function validateDirectiveName(name) {
     warn("Do not use built-in directive ids as custom directive id: " + name);
   }
 }
+const COMPONENTS = "components";
+function resolveComponent(name, maybeSelfReference) {
+  return resolveAsset(COMPONENTS, name, true, maybeSelfReference) || name;
+}
+function resolveAsset(type, name, warnMissing = true, maybeSelfReference = false) {
+  const instance = currentRenderingInstance || currentInstance;
+  if (instance) {
+    const Component2 = instance.type;
+    if (type === COMPONENTS) {
+      const selfName = getComponentName(
+        Component2,
+        false
+        /* do not include inferred name to avoid breaking existing code */
+      );
+      if (selfName && (selfName === name || selfName === camelize(name) || selfName === capitalize(camelize(name)))) {
+        return Component2;
+      }
+    }
+    const res = (
+      // local registration
+      // check instance[type] first which is resolved for options API
+      resolve(instance[type] || Component2[type], name) || // global registration
+      resolve(instance.appContext[type], name)
+    );
+    if (!res && maybeSelfReference) {
+      return Component2;
+    }
+    if (warnMissing && !res) {
+      const extra = type === COMPONENTS ? `
+If this is a native custom element, make sure to exclude it from component resolution via compilerOptions.isCustomElement.` : ``;
+      warn(`Failed to resolve ${type.slice(0, -1)}: ${name}${extra}`);
+    }
+    return res;
+  } else {
+    warn(`resolve${capitalize(type.slice(0, -1))} can only be used in render() or setup().`);
+  }
+}
+function resolve(registry, name) {
+  return registry && (registry[name] || registry[camelize(name)] || registry[capitalize(camelize(name))]);
+}
 const getPublicInstance = (i) => {
   if (!i)
     return null;
@@ -5173,8 +5213,8 @@ function nextTick(instance, fn) {
       _resolve(instance.proxy);
     }
   });
-  return new Promise((resolve) => {
-    _resolve = resolve;
+  return new Promise((resolve2) => {
+    _resolve = resolve2;
   });
 }
 function clone(src, seen) {
@@ -5320,14 +5360,14 @@ function findComponentPublicInstance(mpComponents, id) {
   }
   return null;
 }
-function setTemplateRef({ r, f }, refValue, setupState) {
+function setTemplateRef({ r, f: f2 }, refValue, setupState) {
   if (isFunction(r)) {
     r(refValue, {});
   } else {
     const _isString = isString(r);
     const _isRef = isRef(r);
     if (_isString || _isRef) {
-      if (f) {
+      if (f2) {
         if (!_isRef) {
           return;
         }
@@ -5896,7 +5936,40 @@ function patchStopImmediatePropagation(e, value) {
     return value;
   }
 }
+function vFor(source, renderItem) {
+  let ret;
+  if (isArray(source) || isString(source)) {
+    ret = new Array(source.length);
+    for (let i = 0, l = source.length; i < l; i++) {
+      ret[i] = renderItem(source[i], i, i);
+    }
+  } else if (typeof source === "number") {
+    if (!Number.isInteger(source)) {
+      warn(`The v-for range expect an integer value but got ${source}.`);
+      return [];
+    }
+    ret = new Array(source);
+    for (let i = 0; i < source; i++) {
+      ret[i] = renderItem(i + 1, i, i);
+    }
+  } else if (isObject$1(source)) {
+    if (source[Symbol.iterator]) {
+      ret = Array.from(source, (item, i) => renderItem(item, i, i));
+    } else {
+      const keys = Object.keys(source);
+      ret = new Array(keys.length);
+      for (let i = 0, l = keys.length; i < l; i++) {
+        const key = keys[i];
+        ret[i] = renderItem(source[key], key, i);
+      }
+    }
+  } else {
+    ret = [];
+  }
+  return ret;
+}
 const o = (value, key) => vOn(value, key);
+const f = (source, renderItem) => vFor(source, renderItem);
 const t = (val) => toDisplayString(val);
 function createApp$1(rootComponent, rootProps = null) {
   rootComponent && (rootComponent.mpType = "app");
@@ -7450,17 +7523,21 @@ const createHook = (lifecycle) => (hook, target = getCurrentInstance()) => {
 const onShow = /* @__PURE__ */ createHook(ON_SHOW);
 const onHide = /* @__PURE__ */ createHook(ON_HIDE);
 const onLaunch = /* @__PURE__ */ createHook(ON_LAUNCH);
+const onLoad = /* @__PURE__ */ createHook(ON_LOAD);
 exports._export_sfc = _export_sfc;
 exports.createPinia = createPinia;
 exports.createSSRApp = createSSRApp;
 exports.defineComponent = defineComponent;
 exports.defineStore = defineStore;
+exports.f = f;
 exports.index = index;
 exports.o = o;
 exports.onHide = onHide;
 exports.onLaunch = onLaunch;
+exports.onLoad = onLoad;
 exports.onShow = onShow;
 exports.ref = ref;
+exports.resolveComponent = resolveComponent;
 exports.src_default = src_default;
 exports.t = t;
 exports.unref = unref;

@@ -1,6 +1,6 @@
 import { useStore } from "@/pinia";
 
-const baseURL = ''
+const baseURL = 'https://pcapi-xiaotuxian-front-devtest.itheima.net'
 
 /* 
     添加拦截器
@@ -59,16 +59,9 @@ export const http = <T>(options: UniApp.RequestOptions) => {
             success: (res: UniApp.RequestSuccessCallbackResult) => {
                 // 成功回调
                 if (res.statusCode >= 200 && res.statusCode < 300) {
-                    const data = res.data as Data<T>;
-                    if (data.code === '200') {
-                        resolve(data);
-                    } else {
-                        uni.showToast({
-                            icon: 'none',
-                            title: data.msg
-                        })
-                        reject(data);
-                    }
+                    
+                    resolve(res.data as Data<T>);
+                  
                 } else if (res.statusCode === 401) {
                     //token过期
                     const memberStore = useStore();
