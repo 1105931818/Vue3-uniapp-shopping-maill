@@ -2,6 +2,10 @@
 const common_vendor = require("../common/vendor.js");
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "cust-Swiper",
+  props: {
+    list: null,
+    height: null
+  },
   setup(__props) {
     const activeIndex = common_vendor.ref(0);
     const onChange = (e) => {
@@ -10,13 +14,20 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     };
     return (_ctx, _cache) => {
       return {
-        a: common_vendor.o(onChange),
-        b: common_vendor.f(5, (item, index, i0) => {
+        a: common_vendor.f(__props.list, (item, index, i0) => {
+          return {
+            a: item.imgUrl,
+            b: index
+          };
+        }),
+        b: common_vendor.o(onChange),
+        c: common_vendor.f(__props.list.length, (item, index, i0) => {
           return {
             a: item,
             b: index === activeIndex.value ? 1 : ""
           };
-        })
+        }),
+        d: __props.height
       };
     };
   }

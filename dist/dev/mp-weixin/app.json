@@ -3,10 +3,11 @@
     "pages/index/index",
     "pages/user/user",
     "pages/class/class",
-    "pages/shop/shop"
+    "pages/shop/shop",
+    "pages/hot/hot"
   ],
   "window": {
-    "navigationBarTextStyle": "black",
+    "navigationBarTextStyle": "white",
     "navigationBarTitleText": "uni-app",
     "navigationBarBackgroundColor": "#27ba9b",
     "backgroundColor": "#F8F8F8"

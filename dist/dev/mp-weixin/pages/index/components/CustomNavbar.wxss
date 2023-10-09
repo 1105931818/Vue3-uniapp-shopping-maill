@@ -23,13 +23,30 @@
 /* 垂直间距 */
 /* 透明度 */
 /* 文章场景相关 */
-page {
-  background-color: #f7f7f7;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-.content {
+.navbar.data-v-ff0d84a2 {
   width: 100%;
-  height: calc(100% - 142px);
+  background-color: #27ba9b;
+  color: white;
+  padding-bottom: 3px;
+}
+.navbar .logo.data-v-ff0d84a2 {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  padding-left: 15px;
+}
+.navbar .search.data-v-ff0d84a2 {
+  width: 95%;
+  height: 35px;
+  margin: 5px auto;
+  padding: 0 10px;
+  box-sizing: border-box;
+  background: rgba(243, 243, 243, 0.45);
+  border-radius: 17px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.navbar .search text.data-v-ff0d84a2 {
+  width: calc(100% - 30px);
 }

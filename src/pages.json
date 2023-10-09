@@ -7,7 +7,6 @@
 			"^cust-(.*)": "@/components/cust-$1.vue"
 		}
 	},
-
 	"pages": [
 		{
 			"path": "pages/index/index",
@@ -35,10 +34,16 @@
 			"style": {
 				"navigationBarTitleText": "购物车"
 			}
+		},
+		{
+			"path": "pages/hot/hot",
+			"style": {
+				"navigationBarTitleText": ""
+			}
 		}
 	],
 	"globalStyle": {
-		"navigationBarTextStyle": "black",
+		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#27ba9b",
 		"backgroundColor": "#F8F8F8"

@@ -1,14 +1,14 @@
 <template>
-    <view class="swiper">
+    <view class="swiper" :style="{height: height}">
 
         <swiper
-            :autoplay="false"
+            :autoplay="true"
             :circular="true"
             :interval="3000"
             @change="onChange"
         >
 
-            <swiper-item>
+            <swiper-item v-for="(item, index) in list" :key="index">
 
                 <navigator
                     url="/pages/index/index"
@@ -19,79 +19,7 @@
                     <image
                         mode="aspectFill"
                         class="image"
-                        src="https://marketplace.canva.cn/VL44c/MAE2O4VL44c/1/s2/canva-tea-with-fresh-orange-flowers-on-opened-book-on-tray-MAE2O4VL44c.jpg"
-                    />
-
-                </navigator>
-
-            </swiper-item>
-
-            <swiper-item>
-
-                <navigator
-                    url="/pages/index/index"
-                    hover-class="none"
-                    class="navigator"
-                >
-    
-                    <image
-                        mode="aspectFill"
-                        class="image"
-                        src="https://marketplace.canva.cn/wTFOQ/MADLEgwTFOQ/6/s2/canva-human-skin-conditioner-MADLEgwTFOQ.jpg"
-                    />
-
-                </navigator>
-
-            </swiper-item>
-
-            <swiper-item>
-
-                <navigator
-                    url="/pages/index/index"
-                    hover-class="none"
-                    class="navigator"
-                >
-    
-                    <image
-                        mode="aspectFill"
-                        class="image"
-                        src="https://marketplace.canva.cn/U2FLE/MADLFHU2FLE/4/s2/canva-snow-covered-mountains-wallpaper-MADLFHU2FLE.jpg"
-                    />
-
-                </navigator>
-
-            </swiper-item>
-
-            <swiper-item>
-
-                <navigator
-                    url="/pages/index/index"
-                    hover-class="none"
-                    class="navigator"
-                >
-    
-                    <image
-                        mode="aspectFill"
-                        class="image"
-                        src="https://marketplace.canva.cn/_HxAo/MADLEa_HxAo/6/s2/canva-people-rising-his-hand-in-the-middle-of-sunflower-field-MADLEa_HxAo.jpg"
-                    />
-
-                </navigator>
-
-            </swiper-item>
-
-            <swiper-item>
-
-                <navigator
-                    url="/pages/index/index"
-                    hover-class="none"
-                    class="navigator"
-                >
-    
-                    <image
-                        mode="aspectFill"
-                        class="image"
-                        src="https://marketplace.canva.cn/FSVDQ/MADVfoFSVDQ/4/s2/canva-brown-concrete-roofs-MADVfoFSVDQ.jpg"
+                        :src="item.imgUrl"
                     />
 
                 </navigator>
@@ -101,14 +29,14 @@
         </swiper>
 
         <view class="indicator">
-            <text v-for="(item, index) in 5" :key="item" class="dot" :class="{ active: index === activeIndex }"></text>
+            <text v-for="(item, index) in list.length" :key="item" class="dot" :class="{ active: index === activeIndex }"></text>
         </view>
 
     </view>
 </template>
 
 <script setup lang="ts">
-
+import type { BannerItem } from "@/types/home";
 import { ref } from "vue";
 
 const activeIndex = ref<number>(0);
@@ -118,12 +46,16 @@ const onChange: UniHelper.SwiperOnChange = (e) => {
     activeIndex.value = e.detail!.current;
 }
 
+defineProps<{
+    list: BannerItem[],
+    height: string
+}>()
+
 </script>
 
 <style scoped lang="scss">
 
 .swiper {
-    height: 200px;
     overflow: hidden;
     position: relative;
     transform: translateY(0);

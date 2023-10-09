@@ -53,11 +53,7 @@ const openCode = () => {
     width: 100%;
     background-color: #27ba9b;
     color: white;
-    padding-bottom: 5px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 999;
+    padding-bottom: 3px;
     
     .logo {
         width: 100%;
@@ -69,7 +65,7 @@ const openCode = () => {
     .search { 
         width: 95%;
         height: 35px;
-        margin: 10px auto;
+        margin: 5px auto;
         padding: 0 10px;
         box-sizing: border-box;
         background: rgba($color: #f3f3f3, $alpha: 0.45);

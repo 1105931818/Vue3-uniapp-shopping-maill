@@ -1,0 +1,1 @@
+<view class="category data-v-7e5e1213"><navigator wx:for="{{a}}" wx:for-item="item" wx:key="c" url="/pages/index/index" class="navitem data-v-7e5e1213" hover-class="none"><image class="icon data-v-7e5e1213" src="{{item.a}}"/><text class="data-v-7e5e1213">{{item.b}}</text></navigator></view>

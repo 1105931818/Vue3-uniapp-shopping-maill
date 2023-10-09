@@ -24,7 +24,6 @@
 /* 透明度 */
 /* 文章场景相关 */
 .swiper.data-v-9a32dec4 {
-  height: 200px;
   overflow: hidden;
   position: relative;
   transform: translateY(0);
