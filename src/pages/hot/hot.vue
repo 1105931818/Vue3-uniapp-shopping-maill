@@ -44,7 +44,7 @@
           </view>
         </navigator>
       </view>
-      <view class="loading-text">{{ title }}</view>
+      <view class="loading-text">{{ item.finish ? '没有更多数据了~' : '正在加载中...' }}</view>
     </scroll-view>
   </view>
 
@@ -64,11 +64,9 @@ const query = defineProps<{
 
 const bannerPic = ref<string>();
 
-const subTypes = ref<HotGoodsItem[]>([]);
+const subTypes = ref<(HotGoodsItem & { finish?: boolean })[]>([]);
 
 const subNumber = ref<number>(0);
-
-const title = ref<string>('正在加载...');
 
 const urlMap = [
     { type: '1', title: '特惠推荐', url: '/hot/preference' },
@@ -83,7 +81,11 @@ const currUrlMap = urlMap.find((item) => item.type === query.type);
 uni.setNavigationBarTitle({ title: currUrlMap!.title })
 
 const getHotList = async () => {
-  const result = await getHotRecommendAPI(currUrlMap!.url);
+  const result = await getHotRecommendAPI(currUrlMap!.url, {
+    //环境变量，开发环境，修改初始页面方便测试
+    page: import.meta.env.DEV ? 30 : 1,
+    pageSize: 10
+  });
   bannerPic.value = result.result.bannerPicture
   subTypes.value = result.result.subTypes;
 }
@@ -91,11 +93,15 @@ const getHotList = async () => {
 
 const onScrolltolo = async () => {
     const currsubType = subTypes.value[subNumber.value];
-    if (currsubType.goodsItems.page > currsubType.goodsItems.pages) {
-        title.value = '没有更多数据了~';
-        return uni.showToast({ title: '没有更多数据了', icon: 'none'});
+    if (currsubType.goodsItems.page < currsubType.goodsItems.pages) {
+        currsubType.goodsItems.page++
+        
+    } else {
+        currsubType.finish = true;
+
+        return uni.showToast({ icon: 'none', title: '没有更多数据了' });
     }
-    currsubType.goodsItems.page++
+    
     const result = await getHotRecommendAPI(currUrlMap!.url, {
        subType: currsubType.id,
        page: currsubType.goodsItems.page,

@@ -5,7 +5,7 @@
 
     <view class="guess">
         <navigator
-            url="/pages/index/index"
+            :url="`/pages/goods/goods?id=${item.id}`"
             hover-class="navigator-hover"
             class="guess_item"
             v-for="(item, index) in contList"

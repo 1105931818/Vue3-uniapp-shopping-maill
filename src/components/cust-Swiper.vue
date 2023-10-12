@@ -56,6 +56,7 @@ defineProps<{
 <style scoped lang="scss">
 
 .swiper {
+    width: 100%;
     overflow: hidden;
     position: relative;
     transform: translateY(0);

@@ -14,7 +14,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const bannerPic = common_vendor.ref();
     const subTypes = common_vendor.ref([]);
     const subNumber = common_vendor.ref(0);
-    const title = common_vendor.ref("正在加载...");
     const urlMap = [
       { type: "1", title: "特惠推荐", url: "/hot/preference" },
       { type: "2", title: "爆款推荐", url: "/hot/inVogue" },
@@ -24,17 +23,22 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const currUrlMap = urlMap.find((item) => item.type === query.type);
     common_vendor.index.setNavigationBarTitle({ title: currUrlMap.title });
     const getHotList = async () => {
-      const result = await services_hot.getHotRecommendAPI(currUrlMap.url);
+      const result = await services_hot.getHotRecommendAPI(currUrlMap.url, {
+        //环境变量，开发环境，修改初始页面方便测试
+        page: 30,
+        pageSize: 10
+      });
       bannerPic.value = result.result.bannerPicture;
       subTypes.value = result.result.subTypes;
     };
     const onScrolltolo = async () => {
       const currsubType = subTypes.value[subNumber.value];
-      if (currsubType.goodsItems.page > currsubType.goodsItems.pages) {
-        title.value = "没有更多数据了~";
-        return common_vendor.index.showToast({ title: "没有更多数据了", icon: "none" });
+      if (currsubType.goodsItems.page < currsubType.goodsItems.pages) {
+        currsubType.goodsItems.page++;
+      } else {
+        currsubType.finish = true;
+        return common_vendor.index.showToast({ icon: "none", title: "没有更多数据了" });
       }
-      currsubType.goodsItems.page++;
       const result = await services_hot.getHotRecommendAPI(currUrlMap.url, {
         subType: currsubType.id,
         page: currsubType.goodsItems.page,
@@ -68,12 +72,12 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
                 e: `/pages/goods/goods?id=${goods.id}`
               };
             }),
-            b: subNumber.value === index,
-            c: item.id,
-            d: common_vendor.o(onScrolltolo, item.id)
+            b: common_vendor.t(item.finish ? "没有更多数据了~" : "正在加载中..."),
+            c: subNumber.value === index,
+            d: item.id,
+            e: common_vendor.o(onScrolltolo, item.id)
           };
-        }),
-        d: common_vendor.t(title.value)
+        })
       };
     };
   }

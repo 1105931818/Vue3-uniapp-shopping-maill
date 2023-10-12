@@ -47,7 +47,8 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             a: item.picture,
             b: common_vendor.t(item.name),
             c: common_vendor.t(item.price),
-            d: index
+            d: `/pages/goods/goods?id=${item.id}`,
+            e: index
           };
         }),
         b: common_vendor.t(finish.value ? "已经到底了！" : "正在加载中...")

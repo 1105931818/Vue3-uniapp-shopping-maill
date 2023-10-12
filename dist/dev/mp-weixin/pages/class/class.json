@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "分类",
-  "usingComponents": {}
+  "usingComponents": {
+    "cust-swiper": "../../components/cust-Swiper",
+    "page-skeleton": "./components/PageSkeleton"
+  }
 }

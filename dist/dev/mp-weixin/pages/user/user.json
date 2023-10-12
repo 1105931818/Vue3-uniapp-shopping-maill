@@ -1,5 +1,7 @@
 {
   "navigationBarTitleText": "个人中心",
   "enablePullDownRefresh": false,
-  "usingComponents": {}
+  "usingComponents": {
+    "cust-guess": "../../components/cust-Guess"
+  }
 }

@@ -14,6 +14,58 @@ function makeMap(str, expectsLowerCase) {
   }
   return expectsLowerCase ? (val) => !!map[val.toLowerCase()] : (val) => !!map[val];
 }
+function normalizeStyle(value) {
+  if (isArray(value)) {
+    const res = {};
+    for (let i = 0; i < value.length; i++) {
+      const item = value[i];
+      const normalized = isString(item) ? parseStringStyle(item) : normalizeStyle(item);
+      if (normalized) {
+        for (const key in normalized) {
+          res[key] = normalized[key];
+        }
+      }
+    }
+    return res;
+  } else if (isString(value)) {
+    return value;
+  } else if (isObject$1(value)) {
+    return value;
+  }
+}
+const listDelimiterRE = /;(?![^(]*\))/g;
+const propertyDelimiterRE = /:([^]+)/;
+const styleCommentRE = /\/\*.*?\*\//gs;
+function parseStringStyle(cssText) {
+  const ret = {};
+  cssText.replace(styleCommentRE, "").split(listDelimiterRE).forEach((item) => {
+    if (item) {
+      const tmp = item.split(propertyDelimiterRE);
+      tmp.length > 1 && (ret[tmp[0].trim()] = tmp[1].trim());
+    }
+  });
+  return ret;
+}
+function normalizeClass(value) {
+  let res = "";
+  if (isString(value)) {
+    res = value;
+  } else if (isArray(value)) {
+    for (let i = 0; i < value.length; i++) {
+      const normalized = normalizeClass(value[i]);
+      if (normalized) {
+        res += normalized + " ";
+      }
+    }
+  } else if (isObject$1(value)) {
+    for (const name in value) {
+      if (value[name]) {
+        res += name + " ";
+      }
+    }
+  }
+  return res.trim();
+}
 const toDisplayString = (val) => {
   return isString(val) ? val : val == null ? "" : isArray(val) || isObject$1(val) && (val.toString === objectToString || !isFunction(val.toString)) ? JSON.stringify(val, replacer, 2) : String(val);
 };
@@ -104,8 +156,8 @@ const def = (obj, key, value) => {
   });
 };
 const looseToNumber = (val) => {
-  const n = parseFloat(val);
-  return isNaN(n) ? val : n;
+  const n2 = parseFloat(val);
+  return isNaN(n2) ? val : n2;
 };
 const LINEFEED = "\n";
 const SLOT_DEFAULT_NAME = "d";
@@ -927,7 +979,7 @@ const $off = defineSyncApi(API_OFF, (name, callback) => {
   }
   if (!isArray(name))
     name = [name];
-  name.forEach((n) => emitter.off(n, callback));
+  name.forEach((n2) => emitter.off(n2, callback));
 }, OffProtocol);
 const $emit = defineSyncApi(API_EMIT, (name, ...args) => {
   emitter.emit(name, ...args);
@@ -3282,8 +3334,8 @@ function doWatch(source, cb, { immediate, deep, flush, onTrack, onTrigger } = EM
       warn(`watch() "deep" option is only respected when using the watch(source, callback, options?) signature.`);
     }
   }
-  const warnInvalidSource = (s) => {
-    warn(`Invalid watch source: `, s, `A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types.`);
+  const warnInvalidSource = (s2) => {
+    warn(`Invalid watch source: `, s2, `A watch source can only be a getter/effect function, a ref, a reactive object, or an array of these types.`);
   };
   const instance = getCurrentScope() === (currentInstance === null || currentInstance === void 0 ? void 0 : currentInstance.scope) ? currentInstance : null;
   let getter;
@@ -3297,21 +3349,21 @@ function doWatch(source, cb, { immediate, deep, flush, onTrack, onTrigger } = EM
     deep = true;
   } else if (isArray(source)) {
     isMultiSource = true;
-    forceTrigger = source.some((s) => isReactive(s) || isShallow(s));
-    getter = () => source.map((s) => {
-      if (isRef(s)) {
-        return s.value;
-      } else if (isReactive(s)) {
-        return traverse(s);
-      } else if (isFunction(s)) {
+    forceTrigger = source.some((s2) => isReactive(s2) || isShallow(s2));
+    getter = () => source.map((s2) => {
+      if (isRef(s2)) {
+        return s2.value;
+      } else if (isReactive(s2)) {
+        return traverse(s2);
+      } else if (isFunction(s2)) {
         return callWithErrorHandling(
-          s,
+          s2,
           instance,
           2
           /* ErrorCodes.WATCH_GETTER */
         );
       } else {
-        warnInvalidSource(s);
+        warnInvalidSource(s2);
       }
     });
   } else if (isFunction(source)) {
@@ -3669,9 +3721,9 @@ const PublicInstanceProxyHandlers = {
     }
     let normalizedProps;
     if (key[0] !== "$") {
-      const n = accessCache[key];
-      if (n !== void 0) {
-        switch (n) {
+      const n2 = accessCache[key];
+      if (n2 !== void 0) {
+        switch (n2) {
           case 1:
             return setupState[key];
           case 2:
@@ -5979,13 +6031,31 @@ function vFor(source, renderItem) {
   }
   return ret;
 }
+function stringifyStyle(value) {
+  if (isString(value)) {
+    return value;
+  }
+  return stringify(normalizeStyle(value));
+}
+function stringify(styles) {
+  let ret = "";
+  if (!styles || isString(styles)) {
+    return ret;
+  }
+  for (const key in styles) {
+    ret += `${key.startsWith(`--`) ? key : hyphenate(key)}:${styles[key]};`;
+  }
+  return ret;
+}
 function setRef(ref2, id, opts = {}) {
   const { $templateRefs } = getCurrentInstance();
   $templateRefs.push({ i: id, r: ref2, k: opts.k, f: opts.f });
 }
 const o = (value, key) => vOn(value, key);
 const f = (source, renderItem) => vFor(source, renderItem);
+const s = (value) => stringifyStyle(value);
 const e = (target, ...sources) => extend(target, ...sources);
+const n = (value) => normalizeClass(value);
 const t = (val) => toDisplayString(val);
 const p = (props) => renderProps(props);
 const sr = (ref2, id, opts) => setRef(ref2, id, opts);
@@ -7542,7 +7612,185 @@ const onShow = /* @__PURE__ */ createHook(ON_SHOW);
 const onHide = /* @__PURE__ */ createHook(ON_HIDE);
 const onLaunch = /* @__PURE__ */ createHook(ON_LAUNCH);
 const onLoad = /* @__PURE__ */ createHook(ON_LOAD);
+let mpMixins = {};
+mpMixins = {
+  data() {
+    return {
+      is_show: "none"
+    };
+  },
+  watch: {
+    show(newVal) {
+      this.is_show = this.show;
+    }
+  },
+  created() {
+    this.swipeaction = this.getSwipeAction();
+    if (this.swipeaction && Array.isArray(this.swipeaction.children)) {
+      this.swipeaction.children.push(this);
+    }
+  },
+  mounted() {
+    this.is_show = this.show;
+  },
+  methods: {
+    // wxs 中调用
+    closeSwipe(e2) {
+      if (this.autoClose && this.swipeaction) {
+        this.swipeaction.closeOther(this);
+      }
+    },
+    change(e2) {
+      this.$emit("change", e2.open);
+      if (this.is_show !== e2.open) {
+        this.is_show = e2.open;
+      }
+    },
+    appTouchStart(e2) {
+      const {
+        clientX
+      } = e2.changedTouches[0];
+      this.clientX = clientX;
+      this.timestamp = new Date().getTime();
+    },
+    appTouchEnd(e2, index2, item, position) {
+      const {
+        clientX
+      } = e2.changedTouches[0];
+      let diff2 = Math.abs(this.clientX - clientX);
+      let time = new Date().getTime() - this.timestamp;
+      if (diff2 < 40 && time < 300) {
+        this.$emit("click", {
+          content: item,
+          index: index2,
+          position
+        });
+      }
+    },
+    onClickForPC(index2, item, position) {
+      return;
+    }
+  }
+};
+const mpwxs = mpMixins;
+let bindIngXMixins = {};
+let otherMixins = {};
+class MPAnimation {
+  constructor(options, _this) {
+    this.options = options;
+    this.animation = index.createAnimation({
+      ...options
+    });
+    this.currentStepAnimates = {};
+    this.next = 0;
+    this.$ = _this;
+  }
+  _nvuePushAnimates(type, args) {
+    let aniObj = this.currentStepAnimates[this.next];
+    let styles = {};
+    if (!aniObj) {
+      styles = {
+        styles: {},
+        config: {}
+      };
+    } else {
+      styles = aniObj;
+    }
+    if (animateTypes1.includes(type)) {
+      if (!styles.styles.transform) {
+        styles.styles.transform = "";
+      }
+      let unit = "";
+      if (type === "rotate") {
+        unit = "deg";
+      }
+      styles.styles.transform += `${type}(${args + unit}) `;
+    } else {
+      styles.styles[type] = `${args}`;
+    }
+    this.currentStepAnimates[this.next] = styles;
+  }
+  _animateRun(styles = {}, config = {}) {
+    let ref2 = this.$.$refs["ani"].ref;
+    if (!ref2)
+      return;
+    return new Promise((resolve2, reject) => {
+      nvueAnimation.transition(ref2, {
+        styles,
+        ...config
+      }, (res) => {
+        resolve2();
+      });
+    });
+  }
+  _nvueNextAnimate(animates, step = 0, fn) {
+    let obj = animates[step];
+    if (obj) {
+      let {
+        styles,
+        config
+      } = obj;
+      this._animateRun(styles, config).then(() => {
+        step += 1;
+        this._nvueNextAnimate(animates, step, fn);
+      });
+    } else {
+      this.currentStepAnimates = {};
+      typeof fn === "function" && fn();
+      this.isEnd = true;
+    }
+  }
+  step(config = {}) {
+    this.animation.step(config);
+    return this;
+  }
+  run(fn) {
+    this.$.animationData = this.animation.export();
+    this.$.timer = setTimeout(() => {
+      typeof fn === "function" && fn();
+    }, this.$.durationTime);
+  }
+}
+const animateTypes1 = [
+  "matrix",
+  "matrix3d",
+  "rotate",
+  "rotate3d",
+  "rotateX",
+  "rotateY",
+  "rotateZ",
+  "scale",
+  "scale3d",
+  "scaleX",
+  "scaleY",
+  "scaleZ",
+  "skew",
+  "skewX",
+  "skewY",
+  "translate",
+  "translate3d",
+  "translateX",
+  "translateY",
+  "translateZ"
+];
+const animateTypes2 = ["opacity", "backgroundColor"];
+const animateTypes3 = ["width", "height", "left", "right", "top", "bottom"];
+animateTypes1.concat(animateTypes2, animateTypes3).forEach((type) => {
+  MPAnimation.prototype[type] = function(...args) {
+    this.animation[type](...args);
+    return this;
+  };
+});
+function createAnimation(option, _this) {
+  if (!_this)
+    return;
+  clearTimeout(_this.timer);
+  return new MPAnimation(option, _this);
+}
 exports._export_sfc = _export_sfc;
+exports.bindIngXMixins = bindIngXMixins;
+exports.computed = computed;
+exports.createAnimation = createAnimation;
 exports.createPinia = createPinia;
 exports.createSSRApp = createSSRApp;
 exports.defineComponent = defineComponent;
@@ -7550,16 +7798,21 @@ exports.defineStore = defineStore;
 exports.e = e;
 exports.f = f;
 exports.index = index;
+exports.mpwxs = mpwxs;
+exports.n = n;
 exports.o = o;
 exports.onHide = onHide;
 exports.onLaunch = onLaunch;
 exports.onLoad = onLoad;
 exports.onMounted = onMounted;
 exports.onShow = onShow;
+exports.otherMixins = otherMixins;
 exports.p = p;
 exports.ref = ref;
 exports.resolveComponent = resolveComponent;
+exports.s = s;
 exports.sr = sr;
 exports.src_default = src_default;
 exports.t = t;
 exports.unref = unref;
+exports.wx$1 = wx$1;

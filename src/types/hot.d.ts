@@ -1,13 +1,6 @@
-import type { PageResult } from './global'
+import type { PageResult, GoodsItem } from './global'
 
-export type HotItem = {
-    desc: string;
-    id: string;
-    name: string;
-    orderNum: number;
-    picture: string;
-    price: string;
-}
+export type HotItem = GoodsItem
 
 export type HotGoodsItem = {
    id: string;
