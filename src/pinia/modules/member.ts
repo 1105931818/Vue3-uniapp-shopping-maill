@@ -1,20 +1,22 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import type { LoginResult } from "@/types/member";
+
 
 export const useStore = defineStore(
     'member',
     () => {
         //用户信息
-        const userInfo = ref<any>();
+        const userInfo = ref<LoginResult>();
 
         //保护用户信息
-        const setProfile = (data: any) => {
+        const setProfile = (data: LoginResult) => {
             userInfo.value = data;
         }
 
         //清除用户信息
         const clearProfile = () => {
-            userInfo.value = null;
+            userInfo.value = undefined;
         }
 
         return {

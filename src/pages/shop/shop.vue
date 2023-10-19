@@ -1,9 +1,19 @@
 <script setup lang="ts">
-//
+import type { custGuessInstance } from '@/types/components';
+import { ref } from 'vue';
+
+
+
+const guess = ref<custGuessInstance>()
+
+const scrollList = () => {
+  guess.value?.getMore(); 
+}
+
 </script>
 
 <template>
-  <scroll-view scroll-y class="scroll-view">
+  <scroll-view scroll-y class="scroll-view" @scrolltolower="scrollList">
     <!-- 已登录: 显示购物车 -->
     <template v-if="true">
       <!-- 购物车列表 -->
@@ -61,15 +71,7 @@
           <button class="button">去首页看看</button>
         </navigator>
       </view>
-      <!-- 吸底工具栏 -->
-      <view class="toolbar">
-        <text class="all" :class="{ checked: true }">全选</text>
-        <text class="text">合计:</text>
-        <text class="amount">100</text>
-        <view class="button-grounp">
-          <view class="button payment-button" :class="{ disabled: true }"> 去结算(10) </view>
-        </view>
-      </view>
+      
     </template>
     <!-- 未登录: 提示登录 -->
     <view class="login-blank" v-else>
@@ -79,10 +81,19 @@
       </navigator>
     </view>
     <!-- 猜你喜欢 -->
-    <cust-Guess ref="guessRef"></cust-Guess>
+    <cust-Guess ref="guess"></cust-Guess>
     <!-- 底部占位空盒子 -->
     <view class="toolbar-height"></view>
   </scroll-view>
+  <!-- 吸底工具栏 -->
+      <view class="toolbar">
+        <text class="all" :class="{ checked: true }">全选</text>
+        <text class="text">合计:</text>
+        <text class="amount">100</text>
+        <view class="button-grounp">
+          <view class="button payment-button" :class="{ disabled: true }"> 去结算(10) </view>
+        </view>
+      </view>
 </template>
 
 <style lang="scss">
@@ -98,6 +109,7 @@
 // 滚动容器
 .scroll-view {
   flex: 1;
+  height: calc(100% - 100rpx);
 }
 
 // 购物车列表
@@ -294,7 +306,6 @@
   right: 0;
   bottom: var(--window-bottom);
   z-index: 1;
-
   height: 100rpx;
   padding: 0 20rpx;
   display: flex;

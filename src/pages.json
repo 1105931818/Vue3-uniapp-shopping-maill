@@ -20,7 +20,8 @@
 			"path": "pages/user/user",
 			"style": {
 				"navigationBarTitleText": "个人中心",
-				"enablePullDownRefresh": false
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
 			}
 		},
 		{

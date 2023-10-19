@@ -133,10 +133,19 @@ page {
   font-size: 60rpx;
   color: #ff9545;
 }
+.orders .section .navigator_item {
+  text-align: center;
+  font-size: 24rpx;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 .orders .section .contact {
   padding: 0;
   margin: 0;
-  border: 0;
+  border: none;
   background-color: transparent;
   line-height: inherit;
 }

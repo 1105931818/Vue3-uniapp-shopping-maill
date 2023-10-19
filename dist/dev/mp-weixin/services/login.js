@@ -7,4 +7,14 @@ const postLoginAPI = (data) => {
     data
   });
 };
+const postLoginSimpleAPI = (phoneNumber) => {
+  return utils_http.http({
+    method: "POST",
+    url: "/login/wxMin/simple",
+    data: {
+      phoneNumber
+    }
+  });
+};
 exports.postLoginAPI = postLoginAPI;
+exports.postLoginSimpleAPI = postLoginSimpleAPI;

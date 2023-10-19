@@ -1,17 +1,28 @@
 <script setup lang="ts">
+import type { custGuessInstance } from '@/types/components';
+import { ref } from 'vue';
+
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
+
+
+const guess = ref<custGuessInstance>()
+
 // 订单选项
 const orderTypes = [
-  { type: 1, text: '待付款', icon: 'icon-currency' },
-  { type: 2, text: '待发货', icon: 'icon-gift' },
-  { type: 3, text: '待收货', icon: 'icon-check' },
-  { type: 4, text: '待评价', icon: 'icon-comment' },
+  { type: 1, text: '待付款', icon: 'icon-currency', img: '../../static/svgs/paying.svg' },
+  { type: 2, text: '待发货', icon: 'icon-gift', img: '../../static/svgs/delivered.svg' },
+  { type: 3, text: '待收货', icon: 'icon-check', img: '../../static/svgs/receipt.svg' },
+  { type: 4, text: '待评价', icon: 'icon-comment', img: '../../static/svgs/evaluated.svg' },
 ]
+
+const scrollList = () => {
+   guess.value?.getMore();
+}
 </script>
 
 <template>
-  <scroll-view class="viewport" scroll-y enable-back-to-top>
+  <scroll-view class="viewport" scroll-y enable-back-to-top @scrolltolower="scrollList">
     <!-- 个人资料 -->
     <view class="profile" :style="{ paddingTop: safeAreaInsets!.top + 'px' }">
       <!-- 情况1：已登录 -->
@@ -65,20 +76,24 @@ const orderTypes = [
         <navigator
           v-for="item in orderTypes"
           :key="item.type"
-          :class="item.icon"
           :url="`/pagesOrder/list/list?type=${item.type}`"
-          class="navigator"
+          class="navigator_item"
           hover-class="none"
         >
+          <img :src="item.img" style="width: 36px; height: 36px;">
           {{ item.text }}
         </navigator>
         <!-- 客服 -->
-        <button class="contact icon-handset" open-type="contact">售后</button>
+        <view class="navigator_item">
+          <img src="../../static/svgs/customer_user.svg" style="width: 36px; height: 36px;">
+          <button class="contact icon-handset" open-type="contact">售后</button>
+        </view>
+        
       </view>
     </view>
     <!-- 猜你喜欢 -->
     <view class="guess">
-      <cust-Guess ref="guessRef" />
+      <cust-Guess ref="guess" />
     </view>
   </scroll-view>
 </template>
@@ -205,10 +220,21 @@ page {
         color: #ff9545;
       }
     }
+
+    .navigator_item {
+      text-align: center;
+      font-size: 24rpx;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
     .contact {
       padding: 0;
       margin: 0;
-      border: 0;
+      border: none;
       background-color: transparent;
       line-height: inherit;
     }

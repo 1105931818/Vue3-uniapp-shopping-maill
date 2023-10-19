@@ -1,18 +1,27 @@
 <script setup lang="ts">
-import { postLoginAPI } from '@/services/login';
+import { postLoginAPI, postLoginSimpleAPI } from '@/services/login';
 import { onLoad } from '@dcloudio/uni-app';
+import { useStore } from "@/pinia";
+import type { LoginResult } from "@/types/member";
 
 let code = ''
 
-// 获取用户手机号码
+// 获取用户手机号码，目前该接口针对非个人开发者，且完成了认证的小程序开放
 const onGetphonenumber: UniHelper.ButtonOnGetphonenumber = async (ev) => {
      // 获取参数
     const encryptedData = ev.detail.encryptedData!
     const iv = ev.detail.iv!
     // 登录请求
-    await postLoginAPI({ code, encryptedData, iv })
-    // 成功提示
-    uni.showToast({ icon: 'none', title: '登录成功' })
+    const result = await postLoginAPI({ code, encryptedData, iv })
+
+    loginSuccess(result.result)
+}
+
+//模拟手机号登录
+const onGetphonenumberSimple = async () => {
+    const result = await postLoginSimpleAPI('13412341234')
+    
+    loginSuccess(result.result)
 }
 
 //获取code登录凭证
@@ -20,6 +29,18 @@ onLoad(async () => {
     const result = await wx.login()
     code = result.code
 }) 
+
+const loginSuccess = (profile: LoginResult) => {
+    //保存用户信息
+    const useInfo = useStore()
+    useInfo.setProfile(profile)
+
+    uni.showToast({ icon: 'success', title: '登录成功' })
+    setTimeout(() => {
+        // 页面跳转
+        uni.switchTab({ url: '/pages/user/user' })
+    }, 500)
+}
 
 </script>
 
@@ -47,7 +68,7 @@ onLoad(async () => {
         </view>
         <view class="options">
           <!-- 通用模拟登录 -->
-          <button>
+          <button @tap="onGetphonenumberSimple">
             <text class="icon icon-phone">模拟快捷登录</text>
           </button>
         </view>
@@ -143,8 +164,11 @@ page {
       align-items: center;
       margin-top: 70rpx;
       button {
+        
         padding: 0;
         background-color: transparent;
+
+  
       }
     }
 

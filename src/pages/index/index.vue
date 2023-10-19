@@ -1,7 +1,7 @@
 <template>
 
   <CustomNavbar />
-  
+ 
   <scroll-view 
   refresher-enabled 
   :refresher-triggered="isTigger"

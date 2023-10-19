@@ -15,6 +15,11 @@ if (!Math) {
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "shop",
   setup(__props) {
+    const guess = common_vendor.ref();
+    const scrollList = () => {
+      var _a;
+      (_a = guess.value) == null ? void 0 : _a.getMore();
+    };
     return (_ctx, _cache) => {
       return common_vendor.e({
         a: common_vendor.f(2, (item, k0, i0) => {
@@ -25,7 +30,10 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         }),
         b: `/pages/goods/goods?id=1435025`
       }, {
-        c: common_vendor.sr("guessRef", "2a98e804-2")
+        c: common_vendor.sr(guess, "2a98e804-2", {
+          "k": "guess"
+        }),
+        d: common_vendor.o(scrollList)
       });
     };
   }

@@ -8,7 +8,7 @@ const useStore = common_vendor.defineStore(
       userInfo.value = data;
     };
     const clearProfile = () => {
-      userInfo.value = null;
+      userInfo.value = void 0;
     };
     return {
       userInfo,

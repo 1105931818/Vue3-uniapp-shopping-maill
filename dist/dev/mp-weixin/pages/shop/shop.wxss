@@ -32,6 +32,7 @@
 }
 .scroll-view {
   flex: 1;
+  height: calc(100% - 100rpx);
 }
 .cart-list {
   padding: 0 20rpx;
