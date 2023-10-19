@@ -30,9 +30,12 @@ page {
 }
 .viewport {
   height: 100%;
+}
+.main {
   background-repeat: no-repeat;
   background-image: url(https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/images/center_bg.png);
   background-size: 100% auto;
+  margin-bottom: 20rpx;
 }
 
 /* 用户信息 */
@@ -120,6 +123,7 @@ page {
   display: flex;
   justify-content: space-between;
   padding: 40rpx 20rpx 10rpx;
+  box-sizing: border-box;
 }
 .orders .section .navigator,
 .orders .section .contact {

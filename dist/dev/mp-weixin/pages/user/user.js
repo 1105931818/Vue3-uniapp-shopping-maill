@@ -1,5 +1,7 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
+require("../../pinia/index.js");
+const pinia_modules_member = require("../../pinia/modules/member.js");
 if (!Array) {
   const _easycom_cust_Guess2 = common_vendor.resolveComponent("cust-Guess");
   _easycom_cust_Guess2();
@@ -12,6 +14,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "user",
   setup(__props) {
     const { safeAreaInsets } = common_vendor.index.getSystemInfoSync();
+    const useInfo = pinia_modules_member.useStore();
     const guess = common_vendor.ref();
     const orderTypes = [
       { type: 1, text: "待付款", icon: "icon-currency", img: "../../static/svgs/paying.svg" },
@@ -24,9 +27,13 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       (_a = guess.value) == null ? void 0 : _a.getMore();
     };
     return (_ctx, _cache) => {
-      return common_vendor.e({}, {
-        a: common_vendor.unref(safeAreaInsets).top + "px",
-        b: common_vendor.f(orderTypes, (item, k0, i0) => {
+      return common_vendor.e({
+        a: common_vendor.unref(useInfo).userInfo
+      }, common_vendor.unref(useInfo).userInfo ? {
+        b: common_vendor.unref(useInfo).userInfo.avatar,
+        c: common_vendor.t(common_vendor.unref(useInfo).userInfo.nickname || common_vendor.unref(useInfo).userInfo.account)
+      } : {}, {
+        d: common_vendor.f(orderTypes, (item, k0, i0) => {
           return {
             a: item.img,
             b: common_vendor.t(item.text),
@@ -34,10 +41,11 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
             d: `/pagesOrder/list/list?type=${item.type}`
           };
         }),
-        c: common_vendor.sr(guess, "38b2391e-0", {
+        e: common_vendor.unref(safeAreaInsets).top + "px",
+        f: common_vendor.sr(guess, "38b2391e-0", {
           "k": "guess"
         }),
-        d: common_vendor.o(scrollList)
+        g: common_vendor.o(scrollList)
       });
     };
   }

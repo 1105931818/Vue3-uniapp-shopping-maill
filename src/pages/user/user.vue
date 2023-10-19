@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import type { custGuessInstance } from '@/types/components';
 import { ref } from 'vue';
+import { useStore } from "@/pinia";
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 
+const useInfo = useStore()
 
 const guess = ref<custGuessInstance>()
 
@@ -22,20 +24,24 @@ const scrollList = () => {
 </script>
 
 <template>
-  <scroll-view class="viewport" scroll-y enable-back-to-top @scrolltolower="scrollList">
+  <view class="main" :style="{ paddingTop: safeAreaInsets!.top + 'px' }">
+
+ 
     <!-- 个人资料 -->
-    <view class="profile" :style="{ paddingTop: safeAreaInsets!.top + 'px' }">
+    <view class="profile">
       <!-- 情况1：已登录 -->
-      <view class="overview" v-if="false">
+      <view class="overview" v-if="useInfo.userInfo">
         <navigator url="/pagesMember/profile/profile" hover-class="none">
           <image
             class="avatar"
             mode="aspectFill"
-            src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/uploads/avatar_3.jpg"
+            :src="useInfo.userInfo.avatar"
           ></image>
         </navigator>
         <view class="meta">
-          <view class="nickname"> 黑马程序员 </view>
+          <view class="nickname"> 
+              {{ useInfo.userInfo.nickname || useInfo.userInfo.account }}  
+          </view>
           <navigator class="extra" url="/pagesMember/profile/profile" hover-class="none">
             <text class="update">更新头像昵称</text>
           </navigator>
@@ -91,11 +97,15 @@ const scrollList = () => {
         
       </view>
     </view>
-    <!-- 猜你喜欢 -->
-    <view class="guess">
-      <cust-Guess ref="guess" />
-    </view>
-  </scroll-view>
+
+  </view>
+
+    <scroll-view class="viewport" scroll-y enable-back-to-top @scrolltolower="scrollList">
+        <!-- 猜你喜欢 -->
+        <view class="guess">
+            <cust-Guess ref="guess" />
+        </view>
+    </scroll-view>
 </template>
 
 <style lang="scss">
@@ -107,16 +117,20 @@ page {
 
 .viewport {
   height: 100%;
+}
+
+.main {
   background-repeat: no-repeat;
   background-image: url(https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/images/center_bg.png);
   background-size: 100% auto;
+  margin-bottom: 20rpx;
 }
 
 /* 用户信息 */
 .profile {
   margin-top: 20rpx;
   position: relative;
-
+ 
   .overview {
     display: flex;
     height: 120rpx;
@@ -209,6 +223,7 @@ page {
     display: flex;
     justify-content: space-between;
     padding: 40rpx 20rpx 10rpx;
+    box-sizing: border-box;
     .navigator,
     .contact {
       text-align: center;
