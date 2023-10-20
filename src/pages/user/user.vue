@@ -1,14 +1,11 @@
 <script setup lang="ts">
-import type { custGuessInstance } from '@/types/components';
-import { ref } from 'vue';
 import { useStore } from "@/pinia";
+import { useGuessList } from '@/componsables'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
 
 const useInfo = useStore()
-
-const guess = ref<custGuessInstance>()
 
 // 订单选项
 const orderTypes = [
@@ -18,9 +15,8 @@ const orderTypes = [
   { type: 4, text: '待评价', icon: 'icon-comment', img: '../../static/svgs/evaluated.svg' },
 ]
 
-const scrollList = () => {
-   guess.value?.getMore();
-}
+const { guess, scrollList } = useGuessList()
+
 </script>
 
 <template>
@@ -42,7 +38,7 @@ const scrollList = () => {
           <view class="nickname"> 
               {{ useInfo.userInfo.nickname || useInfo.userInfo.account }}  
           </view>
-          <navigator class="extra" url="/pagesMember/profile/profile" hover-class="none">
+          <navigator class="extra" url="/pagesMember/profile/index" hover-class="none">
             <text class="update">更新头像昵称</text>
           </navigator>
         </view>
@@ -65,7 +61,7 @@ const scrollList = () => {
           </view>
         </view>
       </view>
-      <navigator class="settings" url="/pagesMember/settings/settings" hover-class="none">
+      <navigator class="settings" url="/pagesMember/settings/index" hover-class="none">
         设置
       </navigator>
     </view>

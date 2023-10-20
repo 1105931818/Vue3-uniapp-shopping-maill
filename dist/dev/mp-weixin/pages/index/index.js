@@ -1,6 +1,7 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const services_home = require("../../services/home.js");
+const componsables_index = require("../../componsables/index.js");
 require("../../utils/http.js");
 require("../../pinia/index.js");
 require("../../pinia/modules/member.js");
@@ -24,7 +25,6 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
     const bannerList = common_vendor.ref([]);
     const btnList = common_vendor.ref([]);
     const hotList = common_vendor.ref([]);
-    const guess = common_vendor.ref();
     const isTigger = common_vendor.ref(false);
     const isShow = common_vendor.ref(true);
     const getBanner = async () => {
@@ -39,10 +39,7 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
       const result = await services_home.getHotAPI();
       hotList.value = result.result;
     };
-    const scrollList = () => {
-      var _a;
-      (_a = guess.value) == null ? void 0 : _a.getMore();
-    };
+    const { guess, scrollList } = componsables_index.useGuessList();
     const refLading = async () => {
       var _a, _b;
       isTigger.value = true;
@@ -73,7 +70,10 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         })
       }, {
         f: isTigger.value,
-        g: common_vendor.o(scrollList),
+        g: common_vendor.o(
+          //@ts-ignore
+          (...args) => common_vendor.unref(scrollList) && common_vendor.unref(scrollList)(...args)
+        ),
         h: common_vendor.o(refLading)
       });
     };

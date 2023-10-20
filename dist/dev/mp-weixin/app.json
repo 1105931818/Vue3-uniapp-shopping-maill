@@ -8,6 +8,17 @@
     "pages/goods/goods",
     "pages/login/login"
   ],
+  "subPackages": [
+    {
+      "root": "pagesMember",
+      "pages": [
+        "settings/index",
+        "profile/index",
+        "address/index",
+        "address-form/index"
+      ]
+    }
+  ],
   "window": {
     "navigationBarTextStyle": "white",
     "navigationBarTitleText": "uni-app",
@@ -45,6 +56,14 @@
         "text": "个人"
       }
     ]
+  },
+  "preloadRule": {
+    "pages/user/user": {
+      "network": "all",
+      "packages": [
+        "pagesMember"
+      ]
+    }
   },
   "usingComponents": {}
 }

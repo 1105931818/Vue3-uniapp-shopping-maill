@@ -92,5 +92,44 @@
 				"text": "个人"
 			}
 		]
+	},
+	"subPackages": [
+		{
+			"root": "pagesMember",
+			"pages": [
+				{
+					"path": "settings/index",
+					"style": {
+						"navigationBarTitleText": "设置"
+					}
+				},
+				{
+					"path": "profile/index",
+					"style": {
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "address/index",
+					"style": {
+						"navigationBarTitleText": "地址管理"
+					}
+				},
+				{
+					"path": "address-form/index",
+					"style": {
+						"navigationBarTitleText": "address-form"
+					}
+				}
+			]
+		}
+	],
+	"preloadRule": {
+		"pages/user/user": {
+			"network": "all",
+			"packages": [
+				"pagesMember"
+			]
+		}
 	}
 }

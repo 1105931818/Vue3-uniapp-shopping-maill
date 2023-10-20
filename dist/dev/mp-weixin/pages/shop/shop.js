@@ -1,5 +1,6 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
+const componsables_index = require("../../componsables/index.js");
 if (!Array) {
   const _easycom_uni_swipe_action_item2 = common_vendor.resolveComponent("uni-swipe-action-item");
   const _easycom_uni_swipe_action2 = common_vendor.resolveComponent("uni-swipe-action");
@@ -15,11 +16,7 @@ if (!Math) {
 const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   __name: "shop",
   setup(__props) {
-    const guess = common_vendor.ref();
-    const scrollList = () => {
-      var _a;
-      (_a = guess.value) == null ? void 0 : _a.getMore();
-    };
+    const { guess, scrollList } = componsables_index.useGuessList();
     return (_ctx, _cache) => {
       return common_vendor.e({
         a: common_vendor.f(2, (item, k0, i0) => {
@@ -33,7 +30,10 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         c: common_vendor.sr(guess, "2a98e804-2", {
           "k": "guess"
         }),
-        d: common_vendor.o(scrollList)
+        d: common_vendor.o(
+          //@ts-ignore
+          (...args) => common_vendor.unref(scrollList) && common_vendor.unref(scrollList)(...args)
+        )
       });
     };
   }

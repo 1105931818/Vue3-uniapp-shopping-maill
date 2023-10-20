@@ -1,14 +1,8 @@
 <script setup lang="ts">
-import type { custGuessInstance } from '@/types/components';
-import { ref } from 'vue';
+import { useGuessList } from "@/componsables";
 
 
-
-const guess = ref<custGuessInstance>()
-
-const scrollList = () => {
-  guess.value?.getMore(); 
-}
+const { guess, scrollList } = useGuessList();
 
 </script>
 

@@ -1,6 +1,7 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 require("../../pinia/index.js");
+const componsables_index = require("../../componsables/index.js");
 const pinia_modules_member = require("../../pinia/modules/member.js");
 if (!Array) {
   const _easycom_cust_Guess2 = common_vendor.resolveComponent("cust-Guess");
@@ -15,17 +16,13 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
   setup(__props) {
     const { safeAreaInsets } = common_vendor.index.getSystemInfoSync();
     const useInfo = pinia_modules_member.useStore();
-    const guess = common_vendor.ref();
     const orderTypes = [
       { type: 1, text: "待付款", icon: "icon-currency", img: "../../static/svgs/paying.svg" },
       { type: 2, text: "待发货", icon: "icon-gift", img: "../../static/svgs/delivered.svg" },
       { type: 3, text: "待收货", icon: "icon-check", img: "../../static/svgs/receipt.svg" },
       { type: 4, text: "待评价", icon: "icon-comment", img: "../../static/svgs/evaluated.svg" }
     ];
-    const scrollList = () => {
-      var _a;
-      (_a = guess.value) == null ? void 0 : _a.getMore();
-    };
+    const { guess, scrollList } = componsables_index.useGuessList();
     return (_ctx, _cache) => {
       return common_vendor.e({
         a: common_vendor.unref(useInfo).userInfo
@@ -45,7 +42,10 @@ const _sfc_main = /* @__PURE__ */ common_vendor.defineComponent({
         f: common_vendor.sr(guess, "38b2391e-0", {
           "k": "guess"
         }),
-        g: common_vendor.o(scrollList)
+        g: common_vendor.o(
+          //@ts-ignore
+          (...args) => common_vendor.unref(scrollList) && common_vendor.unref(scrollList)(...args)
+        )
       });
     };
   }

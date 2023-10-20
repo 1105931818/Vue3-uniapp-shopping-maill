@@ -40,15 +40,13 @@ import type { BannerItem, BtnListItem, HotListItem } from "@/types/home";
 import { getHomeBannerAPI, getCategoryAPI, getHotAPI } from '@/services/home'
 import { onLoad } from "@dcloudio/uni-app";
 import { ref } from 'vue';
-import type { custGuessInstance } from "@/types/components";
+import { useGuessList } from "@/componsables";
 
 const bannerList = ref<BannerItem[]>([])
 
 const btnList = ref<BtnListItem[]>([])
 
 const hotList = ref<HotListItem[]>([])
-
-const guess = ref<custGuessInstance>()
 
 const isTigger = ref<boolean>(false)
 
@@ -69,9 +67,7 @@ const getHotList = async () => {
   hotList.value = result.result
 }
 
-const scrollList = () => {
-  guess.value?.getMore();
-}
+const { guess, scrollList } = useGuessList()
 
 const refLading = async () => {
   isTigger.value = true
